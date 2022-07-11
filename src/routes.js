@@ -1,13 +1,10 @@
-import CurCourses from "pages/CurCourses";
+import CurCourses from "pages/CurSubject";
+import DetailExam from "pages/DetailSubject";
 import Error404 from "pages/Error/Error404";
 import Exam from "pages/Exam";
 import ForgotPassword from "pages/ForgotPassword";
 import ListExams from "pages/ListExams/ListExams";
-import React, { lazy } from "react";
-import { default as AllCourses } from "./pages/AllCourses";
-import Setting from 'pages/Setting';
-import DetailExam from "pages/DetailExam";
-import SignIn from "pages/SignIn";
+import Setting from "pages/Setting";
 import { Navigate } from "react-router-dom";
 // const Setting = lazy(() => import('pages/Setting'))
 
@@ -21,21 +18,20 @@ const routes = [
   },
   {
     path: "/",
-    component: <Navigate to='/list-exams' />,
+    component: <Navigate to='/list-subject' />,
   },
   {
-    path: "current-courses",
+    path: "current-subject",
     component: <CurCourses />,
   },
+  // {
+  //   path: "all-courses",
+  //   component: <AllCourses />,
+  // },
   {
-    path: "all-courses",
-    component: <AllCourses />,
-  },
-  {
-    path: "list-exams",
+    path: "list-subjects",
     component: <ListExams />,
   },
-
   {
     path: "setting",
     component: <Setting />,
@@ -52,7 +48,6 @@ const routes = [
     path: "detail-exam",
     component: <DetailExam />,
   },
-
 ];
 
 export default routes;

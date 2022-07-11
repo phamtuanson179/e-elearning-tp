@@ -13,7 +13,6 @@ import {
   Typography,
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import infoAPI from "api/infoAPI";
 import TPNotification from "components/TPNotification";
 import { NOTIFICATION } from "constants/notification";
 import { useEffect, useState } from "react";
@@ -62,12 +61,12 @@ const PersonalInfo = () => {
   };
 
   const getPersonalInfo = async () => {
-    await infoAPI.getInfo().then((res) => {
-      const data = res?.data;
-      setPersonalInfo(data);
-      setAvatar(data.url_avatar);
-      setIsLoading(false);
-    });
+    // await infoAPI.getInfo().then((res) => {
+    //   const data = res?.data;
+    //   setPersonalInfo(data);
+    //   setAvatar(data.url_avatar);
+    //   setIsLoading(false);
+    // });
   };
 
   useEffect(() => {

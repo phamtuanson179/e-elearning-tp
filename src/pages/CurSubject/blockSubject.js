@@ -1,23 +1,17 @@
-
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import MKBox from "components/MKBox";
 import MKTypography from "components/MKTypography";
 import TPCardItem from "components/TPCardItem";
 import { Link } from "react-router-dom";
-import data from "./courseInfo";
 
-
-
-
-
-function BlockCourse() {
+function BlockSubject({ subjects }) {
   const renderData = data.map(({ title, description, items }, idx) => (
     <Grid key={idx} container spacing={4}>
       {items.map(({ image, name, count, route, pro }, idx) => (
         <Grid item xs={12} md={4} sx={{ mb: 2 }} key={idx}>
           <Link to={route}>
-            <TPCardItem image={image} name={name} count={count} type={'Bài'} />
+            <TPCardItem image={image} name={name} count={count} type={"Bài"} />
           </Link>
         </Grid>
       ))}
@@ -37,10 +31,10 @@ function BlockCourse() {
           sx={{ textAlign: "center", my: 6, mx: "auto", px: 0.75 }}
         >
           <MKTypography variant='h2' fontWeight='bold'>
-            Khóa học bạn đang theo
+            Môn học
           </MKTypography>
           <MKTypography variant='body1' color='text'>
-            Đây là các khóa học mà bạn đang theo học
+            Đây là những môn học mà bạn đang theo học
           </MKTypography>
         </Grid>
       </Container>
@@ -49,4 +43,4 @@ function BlockCourse() {
   );
 }
 
-export default BlockCourse;
+export default BlockSubject;

@@ -7,40 +7,35 @@ import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 
 import { Typography } from "antd";
-import infoAPI from "api/infoAPI";
-import loginAPI from "api/loginAPI";
+import authAPI from "api/authAPI";
 // Images
 import bgImage from "assets/images/backgroundSignIn.jpeg";
 // Material Kit 2 React components
 import MKBox from "components/MKBox";
 import MKButton from "components/MKButton";
-import MKInput from "components/MKInput";
 import MKTypography from "components/MKTypography";
 import TPNotification from "components/TPNotification";
 import { NOTIFICATION } from "constants/notification";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import checkLogin from "utils/checkLogin";
 import * as yup from "yup";
 
-const yupSchema = yup.object().shape({
-  email: yup
-    .string()
-    .required("Trường này bắt buộc!")
-    .email("Chưa đúng định dạng!"),
-  password: yup.string().required("Trường này bắt buộc!"),
-});
+// const yupSchema = yup.object().shape({
+//   username: yup.string().required("Trường này bắt buộc!"),
+//   password: yup.string().required("Trường này bắt buộc!"),
+// });
 
 function SignIn() {
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({ resolver: yupResolver(yupSchema) });
+  // const {
+  //   control,
+  //   handleSubmit,
+  //   formState: { errors },
+  // } = useForm({ resolver: yupResolver(yupSchema) });
 
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [username, setusername] = useState("");
   const [password, setPassword] = useState("");
   const [isShowPass, setIsShowPass] = useState(false);
   const [notification, setNotification] = useState({ type: "", message: "" });
@@ -50,9 +45,9 @@ function SignIn() {
     checkLogin() ? navigate("/list-exams") : "";
   }, []);
 
-  const onChangeEmail = (event) => {
+  const onChangeUsername = (event) => {
     const value = event.target.value;
-    setEmail(value);
+    setusername(value);
   };
 
   const onChangePassword = (event) => {
@@ -64,17 +59,16 @@ function SignIn() {
     setIsShowPass(!isShowPass);
   };
 
-  const onSubmit = async (data) => {
+  const onSubmit = async () => {
     try {
-      const payload = {
-        email: data.email,
-        password: data.password,
-      };
+      let payload = new FormData();
+      payload.append("username", username);
+      payload.append("password", password);
+      console.log({ payload });
 
-      await loginAPI.login(payload).then((res) => {
+      await authAPI.login(payload).then((res) => {
         if (res?.status === 200) {
-          localStorage.setItem("accessToken", res?.data.access_token);
-          localStorage.setItem("email", data.email);
+          localStorage.setItem("token", `Bearer ${res?.data.access_token}`);
         } else {
           setNotification({
             message: "Đăng nhập thất bại",
@@ -83,14 +77,10 @@ function SignIn() {
           setOpenNoti(true);
         }
       });
-      await infoAPI.getInfo().then((res) => {
+      await authAPI.aboutMe().then((res) => {
         if (res?.status === 200) {
           setOpenNoti(true);
-          const data = res?.data;
-          localStorage.setItem("userId", data?.user_id);
-          localStorage.setItem("role", data?.role);
-          localStorage.setItem("avatar", data?.url_avatar);
-          localStorage.setItem("room", data?.room);
+          localStorage.setItem("current_user", JSON.stringify(res?.data));
           if (location.state?.from) {
             navigate(location.state.from);
           } else navigate("/list-exams");
@@ -167,92 +157,55 @@ function SignIn() {
                   Đăng nhập
                 </MKTypography>
               </MKBox>
-              <form onSubmit={handleSubmit(onSubmit)} id='sign-in-form'>
-                <Box pt={4} pb={3} px={3}>
-                  <Box component='form' role='form'>
-                    <Box mb={2}>
-                      <Controller
-                        name='email'
-                        control={control}
-                        render={({ field }) => {
-                          return (
-                            <TextField
-                              sx={{
-                                width: "100%",
-                              }}
-                              size='normal'
-                              variant='outlined'
-                              label='Email'
-                              onChange={onChangeEmail}
-                              helperText={
-                                <Typography variant='caption' color='error'>
-                                  {errors.email?.message}
-                                </Typography>
-                              }
-                              {...field}
-                            />
-                          );
-                        }}
-                      />
-                    </Box>
-                    <MKBox
-                      display='flex'
-                      alignItems='center'
-                      sx={{ position: "relative" }}
-                      mb={2}
-                    >
-                      <Controller
-                        name='password'
-                        control={control}
-                        render={({ field }) => {
-                          return (
-                            <>
-                              <TextField
-                                sx={{
-                                  width: "100%",
-                                }}
-                                type={isShowPass ? "text" : "password"}
-                                size='normal'
-                                variant='outlined'
-                                label='Password'
-                                onChange={onChangePassword}
-                                helperText={
-                                  <Typography variant='caption' color='error'>
-                                    {errors.password?.message}
-                                  </Typography>
-                                }
-                                {...field}
-                              />
-                              {isShowPass ? (
-                                <VisibilityOffIcon
-                                  sx={{ position: "absolute", right: 8 }}
-                                  onClick={showPass}
-                                />
-                              ) : (
-                                <VisibilityIcon
-                                  sx={{ position: "absolute", right: 8 }}
-                                  onClick={showPass}
-                                />
-                              )}
-                            </>
-                          );
-                        }}
-                      />
-                    </MKBox>
-
-                    {/* <MKBox mt={3} mb={1} textAlign='center' onClick={() => navigate('/forgot-password', { state: { email: email } })}>
-                                        <MKButton>Bạn quên mật khẩu?</MKButton>
-                                    </MKBox> */}
+              <Box pt={4} pb={3} px={3}>
+                <Box component='form' role='form'>
+                  <Box mb={2}>
+                    <TextField
+                      sx={{
+                        width: "100%",
+                      }}
+                      size='normal'
+                      variant='outlined'
+                      label='Tên tài khoản'
+                      onChange={onChangeUsername}
+                    />
                   </Box>
+                  <MKBox
+                    display='flex'
+                    alignItems='center'
+                    sx={{ position: "relative" }}
+                    mb={2}
+                  >
+                    <TextField
+                      sx={{
+                        width: "100%",
+                      }}
+                      type={isShowPass ? "text" : "password"}
+                      size='normal'
+                      variant='outlined'
+                      label='Mật khẩu'
+                      onChange={onChangePassword}
+                    />
+                    {isShowPass ? (
+                      <VisibilityOffIcon
+                        sx={{ position: "absolute", right: 8 }}
+                        onClick={showPass}
+                      />
+                    ) : (
+                      <VisibilityIcon
+                        sx={{ position: "absolute", right: 8 }}
+                        onClick={showPass}
+                      />
+                    )}
+                  </MKBox>
                 </Box>
-              </form>
+              </Box>
               <MKBox mt={4} mb={1} sx={{ margin: 2, marginBottom: 2 }}>
                 <MKButton
                   variant='gradient'
                   color='info'
                   fullWidth
-                  type='submit'
-                  form='sign-in-form'
+                  onClick={onSubmit}
                 >
                   Đăng nhập
                 </MKButton>

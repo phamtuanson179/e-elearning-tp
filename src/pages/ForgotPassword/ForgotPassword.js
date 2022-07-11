@@ -1,8 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
-import infoAPI from "api/infoAPI";
-import loginAPI from "api/loginAPI";
+import authAPI from "api/authAPI";
 import { UserContext } from "App";
 // Images
 import bgImage from "assets/images/backgroundSignIn.jpeg";
@@ -55,29 +54,9 @@ function ForgotPassword() {
         email: email,
         password: password,
       };
-      await loginAPI.login(data).then((res) => {
+      await authAPI.login(data).then((res) => {
         localStorage.setItem("accessToken", res?.data.access_token);
         localStorage.setItem("email", data.email);
-      });
-      await infoAPI.getInfo().then((res) => {
-        if (res?.status === 200) {
-          setNotification({
-            message: "Đăng nhập thành công!",
-            type: NOTIFICATION.SUCCESS,
-          });
-          setOpenNoti(true);
-          const data = res?.data;
-          localStorage.setItem("userId", data?.user_id);
-          localStorage.setItem("role", data?.role);
-          localStorage.setItem("avatar", data?.url_avatar);
-          setTimeout(() => navigate("/list-exams"), 2000);
-        } else {
-          setNotification({
-            message: "Đăng nhập thất bại",
-            type: NOTIFICATION.ERROR,
-          });
-          setOpenNoti(true);
-        }
       });
     } catch (error) {
       console.log(error);

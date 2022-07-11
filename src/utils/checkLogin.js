@@ -1,12 +1,8 @@
-
-import { isEmpty } from 'lodash'
+import { isEmpty } from "lodash";
 
 const checkLogin = () => {
-  if (!isEmpty(localStorage.getItem("accessToken"))) return true;
-  return false
+  if (!isEmpty(localStorage.getItem("token"))) return true;
+  return false;
 };
 
-export default checkLogin
-
-
-
+export default checkLogin;

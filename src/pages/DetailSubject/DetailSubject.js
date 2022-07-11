@@ -1,19 +1,13 @@
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Container,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Container, Typography } from "@mui/material";
 import Card from "@mui/material/Card";
+import examAPI from "api/examAPI";
+import LastestResult from "containers/LastestResult";
+import Ranking from "containers/Ranking";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import LastestResult from "containers/LastestResult";
-import "./DetailExam.scss";
-import examAPI from "api/examAPI";
-import Ranking from "containers/Ranking";
 import { convertSecondToTime } from "utils/convert";
-const DetailExam = () => {
+import "./DetailSubject.scss";
+const DetailSubject = () => {
   const [exam, setExam] = useState();
   const location = useLocation();
   const navigate = useNavigate();
@@ -183,4 +177,4 @@ const DetailExam = () => {
   );
 };
 
-export default DetailExam;
+export default DetailSubject;
