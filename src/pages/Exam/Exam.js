@@ -1,11 +1,12 @@
 import { Box, CircularProgress } from "@mui/material";
-import examAPI from "api/examAPI";
+import subjectAPI from "api/subjectAPI";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { STATUS } from "./constant";
-import "./exam.scss";
+import "./subject.scss";
 import QuestionDetail from "./QuestionDetail";
 import QuestionNavbar from "./QuestionNavbar";
+import questionAPI from "api/questionAPI";
 
 const convertDatas = (datas) => {
   const result = datas?.map((data, idx) => {
@@ -20,17 +21,16 @@ const convertDatas = (datas) => {
   return result;
 };
 
-const Exam = () => {
+const subject = () => {
   const location = useLocation();
   const [questions, setQuestions] = useState();
   const [questionAmount, setQuestionAmount] = useState(0);
   const [curQuestion, setCurQuestion] = useState("");
   const [curIndexQuestion, setCurIndexQuestion] = useState(0);
   const [nameTest, setNameTest] = useState("");
-  const [duration, setDuration] = useState();
-  const [minPointToPass, setMinPointToPass] = useState();
+  const [minCorrectQuestionToPass, setMinCorrectQuestionToPass] = useState();
   const [startCountDown, setStartCountDown] = useState(false);
-  const [exam, setExam] = useState();
+  const [subject, setSubject] = useState();
   const [isFinish, setIsFinish] = useState(false);
   // const [curQuestionType, setCurQuestionType] = useState();
   const searchQuestionByIdx = (id, questions) => {
@@ -51,23 +51,18 @@ const Exam = () => {
       let curQuestions = [...listQuestions];
       curQuestions[question.idx] = question;
       setQuestions(curQuestions);
-      console.log("eeeeeeeeeeeeee");
     }
   };
 
   // call API
   useEffect(() => {
-    // getExam(location?.state?.exam);
-    const exam = location.state?.exam;
-    console.log({ exam });
-    setExam(exam);
-    const questions = convertDatas(exam.questions);
-    setNameTest(exam?.name);
-    setDuration(exam?.duration);
-    setMinPointToPass(exam?.min_point_to_pass);
-    setQuestions(questions);
-    setQuestionAmount(questions.length);
-    setCurQuestion(questions[0]);
+    // getsubject(location?.state?.subject);
+    const subject = location.state?.subject;
+    getQuestions({ id: subject.id });
+    setSubject(subject);
+    setNameTest(subject?.name);
+    setMinCorrectQuestionToPass(subject?.min_correct_question_to_pass);
+    setQuestionAmount(subject.amount_question);
     // startCountDown(countDown);
   }, []);
 
@@ -77,9 +72,17 @@ const Exam = () => {
     searchQuestionByIdx(curIndexQuestion, questions);
   }, [curIndexQuestion, isFinish]);
 
+  const getQuestions = async (subject_id) => {
+    await questionAPI.getRandomQuestions(subject_id).then((res) => {
+      const res_questions = convertDatas(res.data);
+      setQuestions(res_questions);
+      setCurQuestion(res_questions[0]);
+    });
+  };
+
   return (
-    <Box className='exam__container'>
-      <Box className='exam__container--left'>
+    <Box className='subject__container'>
+      <Box className='subject__container--left'>
         <QuestionNavbar
           questionAmount={questionAmount}
           setCurIndexQuestion={setCurIndexQuestion}
@@ -88,7 +91,7 @@ const Exam = () => {
           questions={questions}
         />
       </Box>
-      <Box className='exam__container--right' sx={{ height: "100%" }}>
+      <Box className='subject__container--right' sx={{ height: "100%" }}>
         <QuestionDetail
           curQuestion={curQuestion}
           setCurQuestion={setCurQuestion}
@@ -96,10 +99,10 @@ const Exam = () => {
           startCountDown={startCountDown}
           setStartCountDown={setStartCountDown}
           questions={questions}
-          duration={location.state?.exam?.duration}
-          minPointToPass={minPointToPass}
+          time={location.state?.subject?.time}
+          minCorrectQuestionToPass={minCorrectQuestionToPass}
           questionAmount={questionAmount}
-          exam={exam}
+          subject={subject}
           isFinish={isFinish}
           setIsFinish={setIsFinish}
         />
@@ -108,4 +111,4 @@ const Exam = () => {
   );
 };
 
-export default Exam;
+export default subject;

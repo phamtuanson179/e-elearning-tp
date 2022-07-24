@@ -1,14 +1,16 @@
 import { Box, Button, Container, Typography } from "@mui/material";
 import Card from "@mui/material/Card";
-import examAPI from "api/examAPI";
+import resultAPI from "api/resultAPI";
+import subjectAPI from "api/subjectAPI";
 import LastestResult from "containers/LastestResult";
 import Ranking from "containers/Ranking";
+import { param } from "express-validator";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { convertSecondToTime } from "utils/convert";
 import "./DetailSubject.scss";
 const DetailSubject = () => {
-  const [exam, setExam] = useState();
+  const [subject, setSubject] = useState();
   const location = useLocation();
   const navigate = useNavigate();
   const [lastestResultExam, setLastestResultExam] = useState();
@@ -17,56 +19,40 @@ const DetailSubject = () => {
   const [shortRankingExam, setShortRankingExam] = useState();
   const [isLoading, setIsLoading] = useState(true);
 
-  const getFullRanking = async (params) => {
-    await examAPI.getFullExamRanking(params).then((res) => {
-      if (res.status === 200) {
-        const data = res?.data;
-        if (data) {
-          setRankingExam(data);
-        }
-      }
-    });
-  };
+  // const getFullRanking = async (params) => {
+  //   await subjectAPI.getFullExamRanking(params).then((res) => {
+  //     if (res.status === 200) {
+  //       const data = res?.data;
+  //       if (data) {
+  //         setRankingExam(data);
+  //       }
+  //     }
+  //   });
+  // };
 
   useEffect(() => {
-    setExam(location.state?.exam);
+    setSubject(location.state?.subject);
   }, []);
 
-  const promiseAll = async () => {
-    const params = {
-      user_id: localStorage.getItem("userId"),
-      exam_id: location.state?.exam?.id,
-    };
-    const test = await Promise.all([
-      examAPI.getExamHistory(params),
-      examAPI.getShortcutExamRanking(params),
-    ]).then(([res1, res2]) => {
-      if (res1.status === 200) {
-        const data = res1.data;
+  const getExamHistory = async (params) => {
+    await resultAPI.getExamHistory(params).then((res) => {
+      if (res.status === 200) {
+        const data = res.data;
         if (data) {
           setHistoryExam(data);
           setLastestResultExam(data[data.length - 1]);
           setIsLoading(false);
         }
       }
-      if (res2?.status === 200) {
-        const data = res2?.data;
-        if (data) {
-          setShortRankingExam(data);
-          setIsLoading(false);
-        }
-      }
     });
-    return test;
   };
 
   useEffect(() => {
     const params = {
-      user_id: localStorage.getItem("userId"),
-      exam_id: location.state?.exam?.id,
+      user_id: JSON.parse(localStorage.getItem("current_user")).id,
+      subject_id: location.state?.subject?.id,
     };
-    promiseAll();
-    getFullRanking(params);
+    getExamHistory(params);
   }, []);
 
   return (
@@ -81,7 +67,7 @@ const DetailSubject = () => {
         backdropFilter: "saturate(200%) blur(30px)",
         boxShadow: ({ boxShadows: { xxl } }) => xxl,
       }}
-      className='detail-exam__container'
+      className='detail-subject__container'
     >
       <Box component='section' py={8}>
         <Container>
@@ -92,7 +78,7 @@ const DetailSubject = () => {
               padding: 2,
               marginBottom: 2,
             }}
-            className='description__exam'
+            className='description__subject'
           >
             <Box
               sx={{
@@ -102,22 +88,14 @@ const DetailSubject = () => {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                backgroundImage: `url(${exam?.image})`,
+                backgroundImage: `url(${subject?.image})`,
                 backgroundRepeat: "no-repeat",
                 maxWidth: 180,
                 height: 180,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
               }}
-            >
-              {/* <img
-                src={exam?.image}
-                style={{
-                  width: 180,
-                  height: 180,
-                }}
-              /> */}
-            </Box>
+            ></Box>
             <Box
               sx={{
                 flex: 2,
@@ -127,20 +105,20 @@ const DetailSubject = () => {
               }}
             >
               <Typography variant={"h2"} marginBottom={2}>
-                {exam?.name}
+                {subject?.name}
               </Typography>
               <Box>
                 <Typography variant='subtitle2'>
                   Thời gian:{" "}
-                  {`${convertSecondToTime(exam?.duration).minutes}:${
-                    convertSecondToTime(exam?.duration).seconds
+                  {`${convertSecondToTime(subject?.time).minutes}:${
+                    convertSecondToTime(subject?.time).seconds
                   }`}
                 </Typography>
                 <Typography variant='subtitle2'>
-                  Số câu hỏi: {exam?.questionAmount}
+                  Số câu hỏi: {subject?.amount_question}
                 </Typography>
                 <Typography variant='subtitle2'>
-                  Số điểm tối thiểu: {exam?.min_point_to_pass}
+                  Số câu đúng tối thiểu: {subject?.min_correct_question_to_pass}
                 </Typography>
               </Box>
             </Box>
@@ -148,7 +126,7 @@ const DetailSubject = () => {
               className='start__button'
               sx={{ height: 40, alignSelf: "center", marginLeft: 2 }}
               onClick={() => {
-                navigate("/exam", { state: { exam: exam } });
+                navigate("/exam", { state: { subject: subject } });
               }}
             >
               Bắt đầu

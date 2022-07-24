@@ -1,6 +1,6 @@
 import Card from "@mui/material/Card";
-import BlockExams from "./BlockExams";
-const ListExams = () => {
+import BlockExams from "./BlockSubject";
+const ListSubjects = () => {
   return (
     <Card
       sx={{
@@ -18,4 +18,4 @@ const ListExams = () => {
     </Card>
   );
 };
-export default ListExams;
+export default ListSubjects;

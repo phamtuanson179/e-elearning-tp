@@ -8,6 +8,7 @@ import MKTypography from "components/MKTypography";
 // prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
 import { Link, useLocation } from "react-router-dom";
+import brandImg from "../../assets/images/brand.png";
 
 function TPAppFooter({ content }) {
   const { brand, socials, menus, copyright } = content;
@@ -25,7 +26,7 @@ function TPAppFooter({ content }) {
       <Container>
         <MKBox sx={{ textAlign: "center" }}>
           <Link to={brand.route}>
-            <img src={brand.image} alt={brand.name} width='200px' />
+            <img src={brandImg} alt={brand.name} width='200px' />
           </Link>
           {/* <MKTypography variant="h6">{brand.name}</MKTypography> */}
         </MKBox>

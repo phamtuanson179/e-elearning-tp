@@ -40,8 +40,6 @@ const OneCorrectAnswer = ({ curQuestion, setCurQuestion }) => {
   };
 
   const renderAnwserQuestion = (answers) => {
-    console.log({ answers });
-
     return (
       <FormControl>
         <RadioGroup
@@ -73,7 +71,7 @@ const OneCorrectAnswer = ({ curQuestion, setCurQuestion }) => {
         }}
       >
         <Typography component={"div"} className='title__question' variant='h5'>
-          {curQuestion?.content}
+          {curQuestion?.title}
         </Typography>
         <Button onClick={() => onClickClearAnswer(curQuestion)}>
           Xoá lựa chọn

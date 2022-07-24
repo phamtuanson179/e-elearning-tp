@@ -14,14 +14,14 @@ const date = new Date().getFullYear();
 
 export default {
   brand: {
-    name: "Material Kit 2",
-    image: brand,
+    name: "Sonpt",
+    image: { brand },
     route: "/",
   },
   socials: [
     {
       icon: <FacebookIcon />,
-      link: "https://www.facebook.com/techpro.com.vn/",
+      link: "https://www.facebook.com/dhbkhn.hust/",
     },
     // {
     //   icon: <TwitterIcon />,
@@ -31,10 +31,10 @@ export default {
     //   icon: <GitHubIcon />,
     //   link: "https://github.com/creativetimofficial",
     // },
-    {
-      icon: <YouTubeIcon />,
-      link: "https://www.youtube.com/user/TechproIAGChannel",
-    },
+    // {
+    //   icon: <YouTubeIcon />,
+    //   link: "https://www.youtube.com/user/TechproIAGChannel",
+    // },
   ],
   menus: [
     {
@@ -83,7 +83,8 @@ export default {
         variant='button'
         fontWeight='regular'
       >
-        Techpro Software
+        Sonpt
+        {/* Techpro Software */}
       </MKTypography>
       .
     </MKTypography>

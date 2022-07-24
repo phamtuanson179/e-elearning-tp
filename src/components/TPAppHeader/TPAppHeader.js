@@ -9,7 +9,7 @@ import MKBox from "components/MKBox";
 import MKButton from "components/MKButton";
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import brandLogoTechpro from "../../assets/images/brand.png";
+import brand from "../../assets/images/brand.png";
 import DefaultNavbarDropdown from "./DefaultNavbarDropdown";
 import DefaultNavbarMobile from "./DefaultNavbarMobile";
 import "./header.scss";
@@ -41,16 +41,15 @@ function TPAppHeader({ transparent, light, action, relative, center }) {
     //   icon: <Icon>view_day</Icon>,
     //   route: "/all-courses",
     // },
-    {
-      name: "Bài thi",
-      icon: <Icon>article</Icon>,
-      route: "/list-exams",
-    },
+    // {
+    //   name: "Bài thi",
+    //   icon: <Icon>article</Icon>,
+    //   route: "/list-subjects",
+    // },
     // {
     //     name: "Liên hệ",
     //     icon: <Icon>contacts</Icon>,
-    //     route: "/list-exams",
-
+    //     route: "/list-subjects",
     // },
   ];
 
@@ -124,9 +123,25 @@ function TPAppHeader({ transparent, light, action, relative, center }) {
             }}
             sx={{ padding: 0, minWidth: 0 }}
           >
-            Thông tin cá nhân{" "}
+            Cài đặt
           </Button>
         </Typography>
+        {/* <Typography
+          variant='subtitle2'
+          fontWeight='bold'
+          sx={{ width: "100%", textAlign: "center" }}
+        >
+          <Button
+            onClick={() => {
+              navigate("/setting");
+              setCurTabs("avt");
+              handleClose();
+            }}
+            sx={{ padding: 0, minWidth: 0 }}
+          >
+            Quản lý{" "}
+          </Button>
+        </Typography> */}
 
         <Typography
           variant='subtitle2'
@@ -173,13 +188,13 @@ function TPAppHeader({ transparent, light, action, relative, center }) {
           justifyContent='space-between'
           alignItems='center'
         >
-          <Link to='/list-exams'>
+          <Link to='/list-subjects'>
             <MKBox
               lineHeight={1}
               py={transparent ? 1.5 : 0.75}
               pl={relative || transparent ? 0 : { xs: 0, lg: 1 }}
             >
-              <img src={brandLogoTechpro} height='36px' />
+              <img src={brand} height='36px' />
             </MKBox>
           </Link>
 

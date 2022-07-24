@@ -7,7 +7,7 @@ import {
   Skeleton,
   CircularProgress,
 } from "@mui/material";
-import examAPI from "api/examAPI";
+import examAPI from "api/questionAPI";
 import { useEffect, useState } from "react";
 import RankingTable from "containers/RankingTable";
 import { convertSecondToTime } from "utils/convert";

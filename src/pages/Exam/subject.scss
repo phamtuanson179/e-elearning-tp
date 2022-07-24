@@ -1,13 +1,13 @@
 @import "../../assets/scss/variables/colorVariables";
 @import "../../assets/scss/variables/mixin";
 
-.exam__container {
+.subject__container {
   display: flex;
   justify-content: space-between;
   margin: 32px 16px 32px 16px;
   min-height: calc(100vh - 170px - 124px - 32px);
 
-  .exam__container--left {
+  .subject__container--left {
     @include main-section;
     margin-right: 16px;
     height: fit-content;
@@ -57,11 +57,11 @@
     }
   }
 
-  .exam__container--right {
+  .subject__container--right {
     @include main-section;
     flex: 3;
 
-    .detail__exam {
+    .detail__question {
       @include title-section;
 
       button {

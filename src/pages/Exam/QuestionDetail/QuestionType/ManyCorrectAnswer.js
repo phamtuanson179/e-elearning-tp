@@ -17,7 +17,6 @@ const ManyCorrectAnswer = ({ curQuestion, setCurQuestion }) => {
   };
 
   const onChangeCheckbox = (e, idx) => {
-    console.log({ idx });
     checkCorrectAnswer(idx);
   };
 
@@ -39,7 +38,6 @@ const ManyCorrectAnswer = ({ curQuestion, setCurQuestion }) => {
     let data = JSON.parse(JSON.stringify(curQuestion));
     // let datas = [...curQuestion.curAnswerList];
     data.curAnswerList[idx] = !data.curAnswerList[idx];
-    // console.log({ answer });
     if (compareArray(data.curAnswerList, Array(4).fill(false)))
       data.status = STATUS.NORESPONSE;
     const correctAnswer = curQuestion.answers.map((ans, idx) =>
@@ -54,8 +52,6 @@ const ManyCorrectAnswer = ({ curQuestion, setCurQuestion }) => {
   };
 
   const renderAnwserQuestion = (answers) => {
-    console.log({ answers });
-
     return (
       <FormGroup>
         {answers.map((answer, idx) => (
@@ -100,7 +96,7 @@ const ManyCorrectAnswer = ({ curQuestion, setCurQuestion }) => {
         }}
       >
         <Typography component={"div"} className='title__question' variant='h5'>
-          {curQuestion?.content}
+          {curQuestion?.title}
         </Typography>
         <Button onClick={() => onClickClearAnswer(curQuestion)}>
           Xoá lựa chọn

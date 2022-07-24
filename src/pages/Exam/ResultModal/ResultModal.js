@@ -1,7 +1,7 @@
 import { Box, Button, Typography } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import { Popover } from "antd";
-import examAPI from "api/examAPI";
+import examAPI from "api/questionAPI";
 // Material Kit 2 PRO React components
 import MKBox from "components/MKBox";
 import MKButton from "components/MKButton";
@@ -14,6 +14,8 @@ import { useNavigate } from "react-router-dom";
 import { STATUS } from "../constant";
 import "./ResultModal.scss";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import { result } from "lodash";
+import resultAPI from "api/resultAPI";
 
 const style = {
   bgcolor: "background.paper",
@@ -31,12 +33,12 @@ const ResultModal = ({
   setShowModalResult,
   questions,
   questionAmount,
-  minPointToPass,
+  minCorrectQuestionToPass,
   setIsFinish,
   countDown,
   isFinish,
-  duration,
-  exam,
+  time,
+  subject,
 }) => {
   const navigate = useNavigate();
   const [notification, setNotification] = useState({ type: "", message: "" });
@@ -68,17 +70,47 @@ const ResultModal = ({
   }, [showModalResult]);
 
   useEffect(() => {
-    point >= minPointToPass ? setIsPass(true) : setIsPass(false);
+    point >= minCorrectQuestionToPass * 10 ? setIsPass(true) : setIsPass(false);
   }, [point]);
-  const handleCloseModal = async () => {
+
+  const convertQuestions = () => {
+    return questions.map((item, idx) => {
+      const userAnswerOfQuestion = [];
+      if (item?.curAnswer != -1) {
+        userAnswerOfQuestion.push(parseInt(item?.curAnswer));
+      } else {
+        item?.curAnswerList.forEach((el, idx) => {
+          if (el == true) userAnswerOfQuestion.push(idx);
+        });
+      }
+      return {
+        id: item?.id,
+        type: item?.type,
+        title: item?.title,
+        subject_id: item?.subject_id,
+        url_file: item?.url_file,
+        answers: item?.answers,
+        user_answers: userAnswerOfQuestion,
+      };
+    });
+  };
+
+  const handleCloseModal = () => {
+    onSubmitResult();
+  };
+
+  const onSubmitResult = async () => {
     const body = {
-      exam_id: exam?.id,
+      subject_id: subject?.id,
       point: point,
-      max_point: questionAmount * 10,
       is_pass: isPass,
-      duration: countDown < 0 ? duration : duration - countDown,
+      user_id: JSON.parse(localStorage.getItem("current_user")).id,
+      time: countDown < 0 ? time : time - countDown,
+      questions: convertQuestions(),
+      created_at: new Date().getTime(),
     };
-    await examAPI.postSaveExam(body).then((res) => {
+
+    await resultAPI.saveResult(body).then((res) => {
       if (res?.status === 200) {
         setNotification({
           message: "Lưu kết quả thành công!",
@@ -86,7 +118,7 @@ const ResultModal = ({
         });
         setOpenNoti(true);
         setShowModalResult(false);
-        navigate("/detail-exam", { state: { exam: exam } });
+        navigate("/detail-subject", { state: { subject: subject } });
       } else {
         setNotification({
           message: "Lưu kết quả thất bại!",

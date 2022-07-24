@@ -38,7 +38,11 @@ function TPCardItem({ image, name, count, type, ...rest }) {
       {name || count > 0 ? (
         <MKBox mt={1} ml={1} lineHeight={1}>
           {name && (
-            <MKTypography variant='h6' fontWeight='bold'>
+            <MKTypography
+              variant='h6'
+              fontWeight='bold'
+              sx={{ TextDecoration: "none" }}
+            >
               {name}
             </MKTypography>
           )}

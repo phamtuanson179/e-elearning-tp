@@ -42,7 +42,7 @@ function SignIn() {
   const [openNoti, setOpenNoti] = useState(false);
 
   useEffect(() => {
-    checkLogin() ? navigate("/list-exams") : "";
+    checkLogin() ? navigate("/list-subjects") : "";
   }, []);
 
   const onChangeUsername = (event) => {
@@ -64,7 +64,6 @@ function SignIn() {
       let payload = new FormData();
       payload.append("username", username);
       payload.append("password", password);
-      console.log({ payload });
 
       await authAPI.login(payload).then((res) => {
         if (res?.status === 200) {
@@ -83,7 +82,7 @@ function SignIn() {
           localStorage.setItem("current_user", JSON.stringify(res?.data));
           if (location.state?.from) {
             navigate(location.state.from);
-          } else navigate("/list-exams");
+          } else navigate("/list-subjects");
         } else {
           setNotification({
             message: "Đăng nhập thất bại",

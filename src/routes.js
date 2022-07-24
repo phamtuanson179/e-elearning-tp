@@ -1,10 +1,12 @@
 import CurCourses from "pages/CurSubject";
-import DetailExam from "pages/DetailSubject";
+import DetailSubject from "pages/DetailSubject";
 import Error404 from "pages/Error/Error404";
 import Exam from "pages/Exam";
 import ForgotPassword from "pages/ForgotPassword";
-import ListExams from "pages/ListExams/ListExams";
+import ListSubjects from "pages/ListSubjects/index";
 import Setting from "pages/Setting";
+import PersonalInfo from "pages/Setting/PersonalInfo";
+import SubjectManager from "pages/Setting/SubjectManager";
 import { Navigate } from "react-router-dom";
 // const Setting = lazy(() => import('pages/Setting'))
 
@@ -30,7 +32,7 @@ const routes = [
   // },
   {
     path: "list-subjects",
-    component: <ListExams />,
+    component: <ListSubjects />,
   },
   {
     path: "setting",
@@ -45,8 +47,16 @@ const routes = [
     component: <ForgotPassword />,
   },
   {
-    path: "detail-exam",
-    component: <DetailExam />,
+    path: "detail-subject",
+    component: <DetailSubject />,
+  },
+  {
+    path: "setting/subject-manager",
+    component: <SubjectManager />,
+  },
+  {
+    path: "setting/personal-info",
+    component: <PersonalInfo />,
   },
 ];
 

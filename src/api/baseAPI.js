@@ -1,4 +1,5 @@
 import axiosInstance from "axios";
+import { useNavigate } from "react-router-dom";
 
 const axiosClient = axiosInstance.create({
   baseURL: "http://localhost:8001",
@@ -27,6 +28,9 @@ axiosClient.interceptors.response.use(
     return response;
   },
   function (err) {
+    // const navigate = useNavigate();
+    // navigate("/sign-in");
+    if (err?.response?.status == 404) console.log(err.response);
     return err;
   }
 );

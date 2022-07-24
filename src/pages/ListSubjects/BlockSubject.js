@@ -2,7 +2,7 @@
 import { Skeleton, Typography } from "@mui/material";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import examAPI from "api/examAPI";
+import subjectAPI from "api/subjectAPI";
 import MKBox from "components/MKBox";
 import MKTypography from "components/MKTypography";
 import TPCardItem from "components/TPCardItem";
@@ -17,23 +17,18 @@ const convertDatas = (datas) =>
       // idExam: data?.id,
       image: data?.image ? data?.image : unknowExam,
       name: data?.name,
-      questionAmount: data?.questions.length,
     };
   });
 
 const BlockExams = () => {
-  const [listExams, setListExams] = useState();
+  const [listSubjects, setListSubjects] = useState();
   const [loading, setLoading] = useState(true);
 
   const getListExams = async (room) => {
-    const params = {
-      room: room,
-    };
-
-    await examAPI.getListExamForRoom(params).then((res) => {
+    await subjectAPI.getSubjectForMe().then((res) => {
       if (res?.data) {
-        const listExams = convertDatas(res?.data);
-        setListExams(listExams);
+        const listSubjects = convertDatas(res?.data);
+        setListSubjects(listSubjects);
         setLoading(false);
       }
     });
@@ -46,14 +41,14 @@ const BlockExams = () => {
   const renderListExams = () => {
     return (
       <Grid container spacing={6} maxWidth={1000}>
-        {listExams?.map((exam, idx) => (
+        {listSubjects?.map((subject, idx) => (
           <Grid item md={4} sm={6} xs={12} key={idx}>
-            <Link to={"/detail-exam"} state={{ exam: exam }}>
+            <Link to={"/detail-subject"} state={{ subject: subject }}>
               <TPCardItem
-                image={exam.image}
-                name={exam.name}
+                image={subject.image}
+                name={subject.name}
                 type={"Câu hỏi"}
-                count={exam.questionAmount}
+                count={subject.amount_question}
               />
             </Link>
           </Grid>
@@ -100,10 +95,10 @@ const BlockExams = () => {
           sx={{ textAlign: "center", mx: "auto", px: 0.75 }}
         >
           <MKTypography variant='h2' fontWeight='bold'>
-            Các bài thi
+            Các môn học
           </MKTypography>
           <MKTypography variant='body1' color='text'>
-            Đây là các bài thi mà bạn có thể thi
+            Đây là các môn học mà bạn đang theo học
           </MKTypography>
         </Grid>
       </Container>

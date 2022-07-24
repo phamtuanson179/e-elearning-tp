@@ -19,7 +19,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import examAPI from "api/examAPI";
+import examAPI from "api/questionAPI";
 import otherAPI from "api/otherAPI";
 import MKButton from "components/MKButton";
 import TPNotification from "components/TPNotification";
@@ -92,7 +92,6 @@ const AddExamModal = ({ loading, setLoading }) => {
     const {
       target: { value },
     } = event;
-    console.log({ value });
 
     setRoomList(
       // On autofill we get a stringified value.
@@ -110,12 +109,10 @@ const AddExamModal = ({ loading, setLoading }) => {
 
   const getAllRoom = async () => {
     await otherAPI.getAllRoom().then((res) => {
-      console.log({ res });
       if (res?.status == 200) {
         const data = res?.data.map((item, idx) => {
           return item?.alias;
         });
-        console.log({ data });
         setAllRooms(data);
       }
     });
@@ -300,7 +297,6 @@ const AddExamModal = ({ loading, setLoading }) => {
 
   return (
     <Box>
-      {/* <Button onClick={handleOpenAddExamModal}>Thêm bài thi</Button> */}
       <Box textAlign={"right"} margin={2}>
         <MKButton
           variant='gradient'

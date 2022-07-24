@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import examAPI from "api/examAPI";
+import examAPI from "api/questionAPI";
 import { useEffect, useState } from "react";
 import unknowExam from "../../../assets/images/unknowExam.png";
 import MKBox from "../../../components/MKBox";
@@ -54,7 +54,6 @@ const ManageExams = () => {
     await examAPI.getListExamForRoom(params).then((res) => {
       if (res?.data) {
         const listExams = convertDatas(res?.data);
-        console.log({ listExams });
         setListExams(listExams);
         if (listExams) setExam(listExams[0]);
         setLoading(false);

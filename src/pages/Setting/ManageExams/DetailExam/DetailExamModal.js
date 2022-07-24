@@ -19,7 +19,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import examAPI from "api/examAPI";
+import examAPI from "api/questionAPI";
 import otherAPI from "api/otherAPI";
 import MKButton from "components/MKButton";
 import TPNotification from "components/TPNotification";
@@ -84,7 +84,6 @@ const DetailExamModal = ({
   setLoading,
   isOpenDetailExamModal,
 }) => {
-  console.log({ exam });
   const [curExam, setCurExam] = useState();
   const [questionList, setQuestionList] = useState([]);
   const [notification, setNotification] = useState({ type: "", message: "" });
@@ -123,12 +122,10 @@ const DetailExamModal = ({
 
   const getAllRoom = async () => {
     await otherAPI.getAllRoom().then((res) => {
-      console.log({ res });
       if (res?.status == 200) {
         const data = res?.data.map((item, idx) => {
           return item?.alias;
         });
-        console.log({ data });
         setAllRooms(data);
       }
     });

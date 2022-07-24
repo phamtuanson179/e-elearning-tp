@@ -12,34 +12,26 @@ const QuestionDetail = ({
   setCurQuestion,
   nameTest,
   questions,
-  duration,
-  minPointToPass,
+  time,
+  minCorrectQuestionToPass,
   questionAmount,
   isFinish,
   setIsFinish,
-  exam,
+  subject,
 }) => {
-  console.log({ curQuestion });
-  console.log({ questions });
   const [showModalResult, setShowModalResult] = useState(false);
-  const [countDown, setCountDown] = useState(duration);
-  const [time, setTime] = useState("00:00");
-  // const [isFinish, setIsFinish] = useState(false);
-
-  // useEffect(() => {
-  //   if (duration) setCountDown(duration);
-  // }, []);
+  const [countDown, setCountDown] = useState(time);
+  const [timeString, setTimeString] = useState("00:00");
 
   useEffect(() => {
-    console.log({ countDown });
     if (!isFinish) {
       if (countDown < 0) {
-        setTime("00:00");
+        setTimeString("00:00");
         setIsFinish(true);
       } else {
         setTimeout(() => {
           const time = convertSecondToTime(countDown);
-          setTime(`${time.minutes}:${time.seconds}`);
+          setTimeString(`${time.minutes}:${time.seconds}`);
           setCountDown(countDown - 1);
         }, 1000);
         return;
@@ -79,7 +71,7 @@ const QuestionDetail = ({
 
   return (
     <Box>
-      <Box className='detail__exam'>
+      <Box className='detail__question'>
         <Typography component={"div"} variant='h5' className='name__test'>
           {nameTest ? nameTest : ""}
         </Typography>
@@ -88,7 +80,7 @@ const QuestionDetail = ({
           variant='h5'
           className='countdown__oclock'
         >
-          Thời gian: {time}
+          Thời gian: {timeString}
         </Typography>
 
         <ResultModal
@@ -96,12 +88,12 @@ const QuestionDetail = ({
           setShowModalResult={setShowModalResult}
           questions={questions}
           questionAmount={questionAmount}
-          minPointToPass={minPointToPass}
+          minCorrectQuestionToPass={minCorrectQuestionToPass}
           isFinish={isFinish}
           setIsFinish={setIsFinish}
-          exam={exam}
           countDown={countDown}
-          duration={duration}
+          time={time}
+          subject={subject}
         />
       </Box>
       {/* ádfádfádfsadfads */}

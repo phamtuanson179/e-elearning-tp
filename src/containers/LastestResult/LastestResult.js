@@ -8,7 +8,7 @@ import {
   Skeleton,
 } from "@mui/material";
 import { Progress } from "antd";
-import examAPI from "api/examAPI";
+import examAPI from "api/questionAPI";
 import { useState } from "react";
 import { convertSecondToTime } from "utils/convert";
 import CloseIcon from "@mui/icons-material/Close";
@@ -106,7 +106,7 @@ const LastestResult = ({ lastestResultExam, historyExam, isLoading }) => {
                 sx={{ display: "flex", alignItems: "center" }}
               >
                 <AccessTimeIcon sx={{ marginRight: 1 }} />
-                {showTime(lastestResultExam?.duration)}
+                {showTime(lastestResultExam?.time)}
               </Typography>
 
               <Button

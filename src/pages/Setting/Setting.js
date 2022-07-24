@@ -1,9 +1,9 @@
 import { Box, Tab, Tabs, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { MENUBAR_ADMIN, MENUBAR_MEMBER, MENUBAR_SUPER_ADMIN } from "./constant";
 import { useLocation } from "react-router-dom";
 import "./Setting.scss";
 import MKBox from "components/MKBox";
+import { MENUBAR_ADMIN, MENUBAR_STUDENT, MENUBAR_TEACHER } from "./constant";
 
 const TabPanel = (props) => {
   const { children, value, index, ...other } = props;
@@ -45,19 +45,19 @@ const Setting = () => {
   };
 
   useEffect(() => {
-    const role = localStorage.getItem("role");
+    const role = JSON.parse(localStorage.getItem("current_user")).role;
     switch (role) {
-      case "0":
-        setMenubar(MENUBAR_MEMBER);
-        break;
-      case "1":
+      case "ADMIN":
         setMenubar(MENUBAR_ADMIN);
         break;
-      case "2":
-        setMenubar(MENUBAR_SUPER_ADMIN);
+      case "STUDENT":
+        setMenubar(MENUBAR_STUDENT);
+        break;
+      case "TEACHER":
+        setMenubar(MENUBAR_TEACHER);
         break;
       default:
-        setMenubar(MENUBAR_MEMBER);
+        setMenubar(MENUBAR_STUDENT);
     }
   }, []);
 

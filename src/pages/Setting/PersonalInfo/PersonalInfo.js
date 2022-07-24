@@ -49,12 +49,10 @@ const PersonalInfo = () => {
 
   const getAllRoom = async () => {
     await otherAPI.getAllRoom().then((res) => {
-      console.log({ res });
       if (res?.status == 200) {
         const data = res?.data.map((item, idx) => {
           return item?.alias;
         });
-        console.log({ data });
         setAllRooms(data);
       }
     });
@@ -75,7 +73,6 @@ const PersonalInfo = () => {
   }, []);
 
   const onSubmit = async (data) => {
-    console.log({ data });
     const convertData = (data) => {
       return {
         ...data,

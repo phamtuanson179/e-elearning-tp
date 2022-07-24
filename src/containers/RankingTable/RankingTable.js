@@ -8,7 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { Progress } from "antd";
-import examAPI from "api/examAPI";
+import examAPI from "api/questionAPI";
 import { useEffect, useState } from "react";
 import { isEmpty } from "lodash";
 import { convertSecondToTime } from "utils/convert";
