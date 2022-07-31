@@ -11,7 +11,7 @@ import { Progress } from "antd";
 import examAPI from "api/questionAPI";
 import { useEffect, useState } from "react";
 import { isEmpty } from "lodash";
-import { convertSecondToTime } from "utils/convert";
+import { convertSecondToTime } from "utils/time";
 
 function createData(user_name, point, duration) {
   return { user_name, point, duration };

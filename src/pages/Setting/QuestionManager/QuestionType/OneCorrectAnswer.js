@@ -24,56 +24,24 @@ import TPNotification from "components/TPNotification";
 import { NOTIFICATION } from "constants/notification";
 import { QUESTION_TYPE } from "constants/questionType";
 import { isEmpty } from "lodash";
-
-const yupSchema = yup.object().shape({
-  content: yup.string().required("Trường này bắt buộc!"),
-  ans0: yup.string().required("Trường này bắt buộc!"),
-  ans1: yup.string().required("Trường này bắt buộc!"),
-  ans2: yup.string().required("Trường này bắt buộc!"),
-  ans3: yup.string().required("Trường này bắt buộc!"),
-  correctAnswerIndex: yup.string().required("Cần chọn một câu trả lời đúng!"),
-});
+import { MODAL_TYPE } from "constants/type";
 
 export const OneCorrectAnswer = ({
-  typeQuestion,
-  questionList,
-  setQuestionList,
-  setIsOpenAddQuestionModal,
+  modalType,
+  curQuestion,
+  setCurQuestion,
 }) => {
   const { handleSubmit, control, reset, setValue, getValues } = useForm();
+  console.log({ curQuestion });
 
-  const onSubmit = (data) => {
-    const newQuestion = {
-      content: data.content,
-      type: typeQuestion,
-      url_file: "",
-      correctAnswerIndex: data.correctAnswerIndex,
-      correctAnswerList: data.correctAnswerList,
-      answers: handleAnwsers([data.ans0, data.ans1, data.ans2, data.ans3]),
-    };
-    setQuestionList([...questionList, newQuestion]);
-    setIsOpenAddQuestionModal(false);
-    reset({});
-    // setValue();
+  const onChangeTitle = (e) => {
+    console.log(curQuestion);
+    setCurQuestion({ ...curQuestion, title: e.target.value });
   };
 
-  const handleCloseAddQuestionModal = () => {
-    setIsOpenAddQuestionModal(false);
-  };
-
-  const handleAnwsers = (answerList) => {
-    const correctAnswerIndex = getValues("correctAnswerIndex");
-
-    let answers = [];
-    for (let i = 0; i < answerList.length; i++) {
-      let answer = {
-        content: answerList[i],
-        is_correct: correctAnswerIndex == i ? true : false,
-        url_file: null,
-      };
-      answers.push(answer);
-    }
-    return answers;
+  const onChangeCorrectAnswer = (e) => {
+    console.log(curQuestion);
+    setCurQuestion({ ...curQuestion, correctAnswer: e.target.value });
   };
 
   return (
@@ -86,8 +54,13 @@ export const OneCorrectAnswer = ({
         label='Câu hỏi'
         sx={{ width: "100%", marginBottom: 3 }}
         variant='standard'
+        value={curQuestion?.title}
+        onChange={onChangeTitle}
       />
-      <RadioGroup>
+      <RadioGroup
+        value={curQuestion?.correctAnswer}
+        onChange={onChangeCorrectAnswer}
+      >
         <Box
           sx={{
             display: "flex",
@@ -107,6 +80,10 @@ export const OneCorrectAnswer = ({
             label='Câu trả lời thứ nhất'
             sx={{ width: "100%" }}
             variant='standard'
+            value={curQuestion?.ans0}
+            onChange={(e) =>
+              setCurQuestion({ ...curQuestion, ans0: e.target.value })
+            }
           />
         </Box>
         <Box
@@ -128,6 +105,10 @@ export const OneCorrectAnswer = ({
             label='Câu trả lời thứ hai'
             sx={{ width: "100%" }}
             variant='standard'
+            value={curQuestion?.ans1}
+            onChange={(e) =>
+              setCurQuestion({ ...curQuestion, ans1: e.target.value })
+            }
           />
         </Box>
         <Box
@@ -148,6 +129,10 @@ export const OneCorrectAnswer = ({
             label='Câu trả lời thứ ba'
             sx={{ width: "100%" }}
             variant='standard'
+            value={curQuestion?.ans2}
+            onChange={(e) =>
+              setCurQuestion({ ...curQuestion, ans2: e.target.value })
+            }
           />
         </Box>
         <Box
@@ -168,6 +153,10 @@ export const OneCorrectAnswer = ({
             label='Câu trả lời thứ tư'
             sx={{ width: "100%" }}
             variant='standard'
+            value={curQuestion?.ans3}
+            onChange={(e) =>
+              setCurQuestion({ ...curQuestion, ans3: e.target.value })
+            }
           />
         </Box>
       </RadioGroup>

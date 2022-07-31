@@ -1,28 +1,33 @@
 import { Box, Typography } from "@mui/material";
-import questionAPI from "api/questionAPI";
+import resultAPI from "api/resultAPI";
 import subjectAPI from "api/subjectAPI";
-import { MODAL_TYPE } from "constants/type";
+import userAPI from "api/userApi";
 import { useEffect, useState } from "react";
 import MKBox from "../../../components/MKBox";
-import QuestionModal from "./QuestionModal";
-import QuestionTable from "./QuestionTable";
+import ResultTable from "./ResultTable";
 
-const QuestionManager = () => {
+const ResultManager = () => {
+  const [listResults, setListResults] = useState();
   const [listSubjects, setListSubjects] = useState();
-  const [listQuestions, setListQuestions] = useState();
+  const [listUsers, setListUsers] = useState();
   const [loading, setLoading] = useState(true);
   const [isLoadSubjectAgain, setIsLoadSubjectAgain] = useState(true);
 
-  const convertQuestions = () => {
-    const listQuestionsConverted = listQuestions?.map((item) => ({
+  const convertResults = () => {
+    const listResultConverted = listResults?.map((item) => ({
       ...item,
       subject: findSubjectById(item.subject_id),
+      user: findUserById(item?.user_id),
     }));
-    setListQuestions(listQuestionsConverted);
+    setListResults(listResultConverted);
   };
 
   const findSubjectById = (subjectId) => {
-    return listSubjects.find((item) => item.id == subjectId);
+    return listSubjects?.find((item) => item.id == subjectId);
+  };
+
+  const findUserById = (userId) => {
+    return listUsers?.find((item) => item.id == userId);
   };
 
   const getAllSubject = async () => {
@@ -34,15 +39,25 @@ const QuestionManager = () => {
     });
   };
 
-  useEffect(() => {
-    convertQuestions();
-  }, [listSubjects]);
+  const getAllUser = async () => {
+    await userAPI.getAll().then((res) => {
+      if (res.status == 200) {
+        console.log(res.data);
+        setListUsers(res?.data);
+      }
+    });
+  };
 
-  const getQuestionForUser = async () => {
-    await questionAPI.getQuestionForUser().then((res) => {
-      if (res?.status == 200) {
-        setListQuestions(res?.data);
+  useEffect(() => {
+    convertResults();
+  }, [listSubjects, listUsers]);
+
+  const getResultForUser = async () => {
+    await resultAPI.getResultForUser().then((res) => {
+      if (res.status == 200) {
+        setListResults(res?.data);
         getAllSubject();
+        getAllUser();
         setLoading(false);
       }
     });
@@ -50,7 +65,7 @@ const QuestionManager = () => {
 
   useEffect(() => {
     if (isLoadSubjectAgain) {
-      getQuestionForUser();
+      getResultForUser();
       setIsLoadSubjectAgain(false);
     }
   }, [isLoadSubjectAgain]);
@@ -66,25 +81,19 @@ const QuestionManager = () => {
         }}
       >
         <Typography variant='h5' component={"div"}>
-          Quản lý câu hỏi
+          Quản lý bài thi
         </Typography>
-        <QuestionModal
-          modalType={MODAL_TYPE.ADD}
-          listSubjects={listSubjects}
-          setIsLoadSubjectAgain={setIsLoadSubjectAgain}
-        ></QuestionModal>
       </Box>
       <Box sx={{ justifyContent: "center", display: "flex" }}>
         {loading ? null : (
-          <QuestionTable
+          <ResultTable
+            listResults={listResults}
             setIsLoadSubjectAgain={setIsLoadSubjectAgain}
-            listSubjects={listSubjects}
-            listQuestions={listQuestions}
-          ></QuestionTable>
+          />
         )}
       </Box>
     </MKBox>
   );
 };
 
-export default QuestionManager;
+export default ResultManager;

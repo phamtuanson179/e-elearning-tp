@@ -1,6 +1,6 @@
 import axiosClient from "./baseAPI";
 
-const userAPI = {
+const subjectAPI = {
   getAll: () => {
     const url = "/subject/get-all";
     return axiosClient.get(url);
@@ -23,4 +23,4 @@ const userAPI = {
   },
 };
 
-export default userAPI;
+export default subjectAPI;

@@ -7,7 +7,7 @@ import Ranking from "containers/Ranking";
 import { param } from "express-validator";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { convertSecondToTime } from "utils/convert";
+import { convertSecondToTime } from "utils/time";
 import "./DetailSubject.scss";
 const DetailSubject = () => {
   const [subject, setSubject] = useState();

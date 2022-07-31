@@ -13,7 +13,7 @@ import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from "@mui/icons-material/Error";
 import { isEmpty } from "lodash";
-import { convertSecondToTime } from "utils/convert";
+import { convertSecondToTime } from "utils/time";
 
 function createData(user_name, duration, point, isPass) {
   return { user_name, duration, point, isPass };

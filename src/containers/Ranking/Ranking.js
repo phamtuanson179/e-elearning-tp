@@ -10,7 +10,7 @@ import {
 import examAPI from "api/questionAPI";
 import { useEffect, useState } from "react";
 import RankingTable from "containers/RankingTable";
-import { convertSecondToTime } from "utils/convert";
+import { convertSecondToTime } from "utils/time";
 import CloseIcon from "@mui/icons-material/Close";
 import "./Ranking.scss";
 import { isEmpty } from "lodash";

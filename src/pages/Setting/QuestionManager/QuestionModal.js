@@ -1,9 +1,20 @@
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
-import { Box, Divider, Modal, TextField, Typography } from "@mui/material";
-import { Select } from "antd";
+import {
+  Box,
+  Divider,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Modal,
+  Select,
+  TextField,
+  Typography,
+} from "@mui/material";
+import questionAPI from "api/questionAPI";
 import MKButton from "components/MKButton";
 import { MODAL_TYPE, QUESTION_TYPE } from "constants/type.js";
+import { set } from "lodash";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import subjectAPI from "../../../api/subjectAPI";
@@ -48,38 +59,63 @@ const QuestionModal = ({
     QUESTION_TYPE.ONE_CORRECT_ANSWER.BACK_END
   );
 
+  const [curQuestion, setCurQuestion] = useState({});
+
   const [subjectIdOfQuestion, setSubjectIdOfQuestion] = useState("");
 
   const { control, handleSubmit, reset, getValues, setValue } = useForm();
 
   useEffect(() => {
-    console.log({ listSubjects });
     if (modalType == MODAL_TYPE.UPDATE) {
-      setValue("title", question.title);
-      // setValue("type", question.type);
-      // setValue("subject_id", question.subject_id);
+      const curQuestionConverted = {
+        title: question?.title,
+        ans0: question?.answers[0].content,
+        ans1: question?.answers[1].content,
+        ans2: question?.answers[2].content,
+        ans3: question?.answers[3].content,
+        correctAnswer: question?.answers.findIndex(
+          (item) => item?.is_correct == true
+        ),
+      };
+      setCurQuestion(curQuestionConverted);
+      setQuestionType(question?.type);
+      setSubjectIdOfQuestion(question?.subject_id);
     }
   }, []);
 
+  const convertAnswerForOneCorrectAnswer = () => {
+    const answers = [
+      { content: curQuestion.ans0, is_correct: false },
+      { content: curQuestion.ans1, is_correct: false },
+      { content: curQuestion.ans2, is_correct: false },
+      { content: curQuestion.ans3, is_correct: false },
+    ];
+    answers[parseInt(curQuestion.correctAnswer)].is_correct = true;
+    console.log({ answers });
+    return answers;
+  };
+
   const onSubmit = async (data) => {
+    console.log(data);
+    const convertedAnswer = convertAnswerForOneCorrectAnswer();
+
     const payload = {
-      name: data.name,
-      time: data.time,
-      description: data.description,
-      amount_question: data.amount_question,
-      min_correct_question_to_pass: data.min_correct_question_to_pass,
-      alias: data.alias,
+      subject_id: subjectIdOfQuestion,
+      type: questionType,
+      title: curQuestion.title,
+      answers: convertedAnswer,
     };
+    console.log({ question });
     if (modalType == MODAL_TYPE.UPDATE) {
       const params = {
         id: question?.id,
       };
-      updateSubject(params, data);
-    } else addSubject(data);
+      update(params, payload);
+    } else create(payload);
   };
 
-  const addSubject = async (payload) => {
-    await subjectAPI.create(payload).then((res) => {
+  const create = async (payload) => {
+    await questionAPI.create(payload).then((res) => {
       if (res.status == 200) {
         setIsOpenSubjectModal(false);
         setIsLoadSubjectAgain(true);
@@ -87,8 +123,8 @@ const QuestionModal = ({
     });
   };
 
-  const updateSubject = async (params, payload) => {
-    await subjectAPI.update(params, payload).then((res) => {
+  const update = async (params, payload) => {
+    await questionAPI.update(params, payload).then((res) => {
       if (res.status == 200) {
         setIsOpenSubjectModal(false);
         setIsLoadSubjectAgain(true);
@@ -157,44 +193,13 @@ const QuestionModal = ({
             </Box>
             <Divider sx={{ marginBottom: 0 }} />
             <Box sx={{ padding: 2, maxHeight: "80vh", overflowY: "auto" }}>
-              <form onSubmit={handleSubmit(onSubmit)} id='form-add-question'>
-                <Controller
-                  name='title'
-                  control={control}
-                  render={({ field }) => {
-                    return (
-                      <TextField
-                        sx={{ width: "100%", marginBottom: 2 }}
-                        variant='outlined'
-                        label='Tiêu đề'
-                        {...field}
-                      />
-                    );
-                  }}
-                />
-                <Select
-                  size='large'
-                  value={questionType}
-                  onChange={(value) => setQuestionType(value)}
-                  style={{ width: "100%" }}
-                >
-                  <Option value={QUESTION_TYPE.ONE_CORRECT_ANSWER.BACK_END}>
-                    {QUESTION_TYPE.ONE_CORRECT_ANSWER.VIEW}
-                  </Option>
-                  <Option value={QUESTION_TYPE.MANY_CORRECT_ANSWER.BACK_END}>
-                    {QUESTION_TYPE.MANY_CORRECT_ANSWER.VIEW}
-                  </Option>
-                  <Option value={QUESTION_TYPE.TRUE_FALSE_ANSWER.BACK_END}>
-                    {QUESTION_TYPE.TRUE_FALSE_ANSWER.VIEW}
-                  </Option>
-                </Select>
-
-                {/* <FormControl fullWidth>
-                  <InputLabel id='demo-simple-select-label'>Age</InputLabel>
+              <form onSubmit={handleSubmit(onSubmit)} id='form-create-question'>
+                <FormControl fullWidth>
+                  <InputLabel id='age-label'>Loại câu hỏi</InputLabel>
                   <Select
-                    id='demo-simple-select'
+                    id='age-label'
                     sx={{ height: 45 }}
-                    labelId='demo-simple-select-label'
+                    labelId='age-label'
                     value={questionType}
                     onChange={(e) => setQuestionType(e.target.value)}
                   >
@@ -206,7 +211,7 @@ const QuestionModal = ({
                       value={QUESTION_TYPE.TRUE_FALSE_ANSWER.BACK_END}
                     >
                       {QUESTION_TYPE.TRUE_FALSE_ANSWER.VIEW}
-                    </MenuItem>{" "}
+                    </MenuItem>
                     <MenuItem
                       disabled
                       value={QUESTION_TYPE.MANY_CORRECT_ANSWER.BACK_END}
@@ -217,11 +222,11 @@ const QuestionModal = ({
                 </FormControl>
 
                 <FormControl fullWidth sx={{ marginTop: 2 }}>
-                  <InputLabel id='demo-simple-select-label'>Môn học</InputLabel>
+                  <InputLabel id='subject-label'>Môn học</InputLabel>
                   <Select
-                    id='demo-simple-select'
+                    id='subject-label'
                     sx={{ height: 45 }}
-                    labelId='demo-simple-select-label'
+                    labelId='subject-label'
                     value={subjectIdOfQuestion}
                     onChange={(e) => setSubjectIdOfQuestion(e.target.value)}
                   >
@@ -230,10 +235,14 @@ const QuestionModal = ({
                         <MenuItem value={subject?.id}>{subject?.name}</MenuItem>
                       ))}
                   </Select>
-                </FormControl> */}
+                </FormControl>
 
                 {questionType == QUESTION_TYPE.ONE_CORRECT_ANSWER.BACK_END ? (
-                  <OneCorrectAnswer />
+                  <OneCorrectAnswer
+                    modalType={modalType}
+                    curQuestion={curQuestion}
+                    setCurQuestion={setCurQuestion}
+                  />
                 ) : (
                   ""
                 )}
@@ -251,7 +260,11 @@ const QuestionModal = ({
                   >
                     Đóng
                   </MKButton>
-                  <MKButton type='submit' color='info' form='form-add-question'>
+                  <MKButton
+                    type='submit'
+                    color='info'
+                    form='form-create-question'
+                  >
                     Lưu
                   </MKButton>
                 </Box>

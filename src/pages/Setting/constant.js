@@ -2,6 +2,8 @@ import PersonalInfo from "./PersonalInfo";
 import ManageExams from "./ManageExams";
 import SubjectManager from "./SubjectManager";
 import QuestionManager from "./QuestionManager";
+import ResultManager from "./ResultManager";
+import UserManager from "./UserManager";
 
 export const MENUBAR_ADMIN = [
   {
@@ -9,20 +11,21 @@ export const MENUBAR_ADMIN = [
     component: <PersonalInfo />,
     href: "setting/personal-info",
   },
-
   {
     name: "Quản lý bài thi",
-    component: <ManageExams />,
+    component: <ResultManager />,
   },
   {
     name: "Quản lý môn học",
     component: <SubjectManager />,
-    href: "setting/subject-manager",
   },
   {
     name: "Quản lý câu hỏi",
     component: <QuestionManager />,
-    href: "setting/question-manager",
+  },
+  {
+    name: "Quản lý người dùng",
+    component: <UserManager />,
   },
 ];
 
@@ -42,6 +45,14 @@ export const MENUBAR_TEACHER = [
   },
   {
     name: "Quản lý bài thi",
-    component: <ManageExams />,
+    component: <ResultManager />,
+  },
+  {
+    name: "Quản lý câu hỏi",
+    component: <QuestionManager />,
+  },
+  {
+    name: "Quản lý người dùng",
+    component: <UserManager />,
   },
 ];

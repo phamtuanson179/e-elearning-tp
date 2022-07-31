@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
-import { QUESTION_TYPE } from "constants/questionType";
+import { QUESTION_TYPE } from "constants/type";
 import { useEffect, useState } from "react";
-import { convertSecondToTime } from "../../../utils/convert";
+import { convertSecondToTime } from "../../../utils/time";
 import ResultModal from "../ResultModal";
 import ManyCorrectAnswer from "./QuestionType/ManyCorrectAnswer";
 import OneCorrectAnswer from "./QuestionType/OneCorrectAnswer";
@@ -46,21 +46,21 @@ const QuestionDetail = ({
   }, [questions]);
 
   const renderQuestion = () => {
-    if (curQuestion.type === QUESTION_TYPE.MANY_CORRECT_ANSWERS)
+    if (curQuestion.type === QUESTION_TYPE.MANY_CORRECT_ANSWER.BACK_END)
       return (
         <ManyCorrectAnswer
           curQuestion={curQuestion}
           setCurQuestion={setCurQuestion}
         />
       );
-    else if (curQuestion.type === QUESTION_TYPE.ONE_CORRECT_ANSWER)
+    else if (curQuestion.type === QUESTION_TYPE.ONE_CORRECT_ANSWER.BACK_END)
       return (
         <OneCorrectAnswer
           curQuestion={curQuestion}
           setCurQuestion={setCurQuestion}
         />
       );
-    else if (curQuestion.type === QUESTION_TYPE.TRUE_FALSE_ANSWERS)
+    else if (curQuestion.type === QUESTION_TYPE.TRUE_FALSE_ANSWER.BACK_END)
       return (
         <TrueFalseAnswer
           curQuestion={curQuestion}
@@ -96,7 +96,6 @@ const QuestionDetail = ({
           subject={subject}
         />
       </Box>
-      {/* ádfádfádfsadfads */}
       {renderQuestion()}
     </Box>
   );

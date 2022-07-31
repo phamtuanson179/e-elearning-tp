@@ -8,11 +8,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import subjectAPI from "../../../api/subjectAPI";
-import questionAPI from "api/questionAPI";
-export default function DeleteQuestionPopover({
-  question_id,
-  setIsLoadSubjectAgain,
-}) {
+import userAPI from "api/userApi";
+export default function DeleteUserPopover({ user_id, setIsLoadSubjectAgain }) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -23,11 +20,11 @@ export default function DeleteQuestionPopover({
     setOpen(false);
   };
 
-  const deleteQuestion = async () => {
+  const deleteUser = async () => {
     const params = {
-      id: question_id,
+      id: user_id,
     };
-    await questionAPI.delete(params).then((res) => {
+    await userAPI.delete(params).then((res) => {
       if (res.status == 200) {
         handleClose();
         setIsLoadSubjectAgain(true);
@@ -46,21 +43,21 @@ export default function DeleteQuestionPopover({
         aria-labelledby='alert-dialog-title'
         aria-describedby='alert-dialog-description'
       >
-        <DialogTitle id='alert-dialog-title'>Xoá câu hỏi</DialogTitle>
+        <DialogTitle id='alert-dialog-title'>Xoá người dùng</DialogTitle>
         <DialogContent sx={{ textAlign: "center" }}>
           <ErrorOutlineIcon
             className='text-danger'
             sx={{ fontSize: "100px !important", margin: "auto" }}
           />
           <DialogContentText id='alert-dialog-description'>
-            Bạn có chắc chắc muốn xoá câu hỏi này?
+            Bạn có chắc chắc muốn xoá người dùng này?
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ justifyContent: "space-between" }}>
           <button className='btn btn-dark' onClick={handleClose}>
             Huỷ
           </button>
-          <button className='btn btn-danger' onClick={deleteQuestion} autoFocus>
+          <button className='btn btn-danger' onClick={deleteUser} autoFocus>
             Xác nhận
           </button>
         </DialogActions>

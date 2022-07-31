@@ -25,9 +25,7 @@ export default function App() {
     <ThemeProvider theme={theme}>
       {/* <CssBaseline /> */}
       <Suspense fallback={<div>Loading...</div>}>
-        <LocalizationProvider dateAdapter={DateAdapter}>
-          <DefaultLayout />
-        </LocalizationProvider>
+        <DefaultLayout />
       </Suspense>
     </ThemeProvider>
   );

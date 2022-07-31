@@ -16,6 +16,7 @@ const DefaultLayout = () => {
         }}
         sticky
       />
+      {console.log("ssss")}
       <TPAppContent />
       <TPAppFooter content={footerRoutes} />
     </Box>

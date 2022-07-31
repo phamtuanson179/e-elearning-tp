@@ -10,7 +10,7 @@ import {
 import { Progress } from "antd";
 import examAPI from "api/questionAPI";
 import { useState } from "react";
-import { convertSecondToTime } from "utils/convert";
+import { convertSecondToTime } from "utils/time";
 import CloseIcon from "@mui/icons-material/Close";
 import "./LastestResult.scss";
 import HistoryExamTable from "containers/HistoryExamTable";

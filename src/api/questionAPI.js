@@ -9,6 +9,10 @@ const questionAPI = {
     const url = "/question/get-all";
     return axiosClient.get(url);
   },
+  getQuestionForUser: () => {
+    const url = "/question/get-question-for-user";
+    return axiosClient.get(url);
+  },
   update: (params, data) => {
     const url = "/question/update";
     return axiosClient.put(url, data, { params });
@@ -19,7 +23,7 @@ const questionAPI = {
   },
   delete: (params) => {
     const url = "/question/delete";
-    return axiosClient.post(url, { params });
+    return axiosClient.delete(url, { params });
   },
 };
 
