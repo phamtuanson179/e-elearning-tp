@@ -17,7 +17,6 @@ const UserManager = () => {
   const [isLoadSubjectAgain, setIsLoadSubjectAgain] = useState(true);
 
   const convertUsers = () => {
-    console.log({ listUsers });
     const listUserConverted = listUsers?.map((item) => ({
       ...item,
       list_subjects: item?.list_subjects_id.map((subject_id) =>

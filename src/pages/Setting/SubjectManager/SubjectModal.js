@@ -8,6 +8,7 @@ import subjectAPI from "../../../api/subjectAPI";
 import { Controller, useForm } from "react-hook-form";
 import { MODAL_TYPE } from "constants/type.js";
 import EditIcon from "@mui/icons-material/Edit";
+import TPUploadImage from "components/TPUploadImage/TPUploadImage.js";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -36,39 +37,48 @@ const style = {
 
 const SubjectModal = ({ modalType, subject, setIsLoadSubjectAgain }) => {
   const [isOpenSubjectModal, setIsOpenSubjectModal] = useState(false);
+  const [image, setImage] = useState();
+
   const [notification, setNotification] = useState({ type: "", message: "" });
 
   const { control, handleSubmit, reset, getValues, setValue } = useForm();
 
   useEffect(() => {
+    reset();
+    setImage("");
+
     if (modalType == MODAL_TYPE.UPDATE) {
-      setValue("name", subject.name);
-      setValue("type", subject.type);
-      setValue("time", subject.time);
-      setValue("amount_question", subject.amount_question);
+      setValue("name", subject?.name);
+      setValue("type", subject?.type);
+      setValue("time", subject?.time);
+      setValue("amount_question", subject?.amount_question);
+
+      setImage(subject?.image);
       setValue(
         "min_correct_question_to_pass",
-        subject.min_correct_question_to_pass
+        subject?.min_correct_question_to_pass
       );
-      setValue("alias", subject.alias);
+      setValue("alias", subject?.alias);
+      setValue("description", subject?.description);
     }
   }, []);
 
   const onSubmit = async (data) => {
     const payload = {
-      name: data.name,
-      time: data.time,
-      description: data.description,
-      amount_question: data.amount_question,
-      min_correct_question_to_pass: data.min_correct_question_to_pass,
-      alias: data.alias,
+      name: data?.name,
+      time: data?.time,
+      description: data?.description,
+      amount_question: data?.amount_question,
+      min_correct_question_to_pass: data?.min_correct_question_to_pass,
+      alias: data?.alias,
+      image: image,
     };
     if (modalType == MODAL_TYPE.UPDATE) {
       const params = {
         id: subject?.id,
       };
-      updateSubject(params, data);
-    } else addSubject(data);
+      updateSubject(params, payload);
+    } else addSubject(payload);
   };
 
   const addSubject = async (payload) => {
@@ -150,13 +160,14 @@ const SubjectModal = ({ modalType, subject, setIsLoadSubjectAgain }) => {
             <Divider sx={{ marginBottom: 0 }} />
             <Box sx={{ padding: 2, maxHeight: "80vh", overflowY: "auto" }}>
               <form onSubmit={handleSubmit(onSubmit)} id='form-add-subject'>
+                <TPUploadImage img={image} setImg={setImage} />
                 <Controller
                   name='name'
                   control={control}
                   render={({ field }) => {
                     return (
                       <TextField
-                        sx={{ width: "100%", marginBottom: 2 }}
+                        sx={{ width: "100%", marginBottom: 2, marginTop: 2 }}
                         variant='outlined'
                         label='Tên môn học'
                         {...field}

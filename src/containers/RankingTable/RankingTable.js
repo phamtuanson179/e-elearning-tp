@@ -11,25 +11,13 @@ import { Progress } from "antd";
 import examAPI from "api/questionAPI";
 import { useEffect, useState } from "react";
 import { isEmpty } from "lodash";
-import { convertSecondToTime } from "utils/time";
-
-function createData(user_name, point, duration) {
-  return { user_name, point, duration };
-}
+import { convertSecondToTime, convertTimestampToFullDate } from "utils/time";
 
 const RankingTable = ({ rankingExam }) => {
   const [rows, setRows] = useState();
 
-  const convertDataToRowTable = (datas) => {
-    const rows = [];
-    datas.map((data, idx) => {
-      rows.push(createData(data?.user_name, data?.point, data?.duration));
-    });
-    setRows(rows);
-  };
-
   useEffect(() => {
-    if (rankingExam) convertDataToRowTable(rankingExam);
+    if (rankingExam) setRows(rankingExam);
   }, []);
 
   const showTime = (duration) => {
@@ -50,7 +38,8 @@ const RankingTable = ({ rankingExam }) => {
             <TableCell align='center'>Stt</TableCell>
             <TableCell>Tên</TableCell>
             <TableCell align='right'>Điểm</TableCell>
-            <TableCell align='right'>Thời gian</TableCell>
+            <TableCell align='right'>Thời gian thi</TableCell>
+            <TableCell align='right'>Thời điểm thi</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -62,10 +51,13 @@ const RankingTable = ({ rankingExam }) => {
               >
                 <TableCell align='center'>{idx + 1}</TableCell>
                 <TableCell component='th' scope='row'>
-                  {row.user_name}
+                  {row?.user?.fullname}
                 </TableCell>
-                <TableCell align='right'>{row.point}</TableCell>
-                <TableCell align='right'>{showTime(row.duration)}</TableCell>
+                <TableCell align='right'>{row?.point}</TableCell>
+                <TableCell align='right'>{showTime(row?.time)}</TableCell>
+                <TableCell align='right'>
+                  {convertTimestampToFullDate(row?.created_at)}
+                </TableCell>
               </TableRow>
             ))}
         </TableBody>

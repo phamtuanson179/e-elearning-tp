@@ -28,11 +28,26 @@ const style = {
   border: "1px solid #0000003d",
 };
 
-const Ranking = ({ rankingExam, shortRankingExam, isLoading }) => {
+const Ranking = ({ rankingExam, isLoading }) => {
   const [openModal, setOpenModal] = useState();
+  const [rankingMe, setRankingMe] = useState();
   const handleCloseModal = () => {
     setOpenModal(false);
   };
+
+  const getRankingForMe = () => {
+    const userId = JSON.parse(localStorage.getItem("current_user")).id;
+    console.log(rankingExam?.findIndex((item) => item.user_id == userId));
+    setRankingMe(
+      rankingExam?.findIndex((item) => {
+        item.user_id == userId;
+      }) + 1
+    );
+  };
+
+  useEffect(() => {
+    getRankingForMe();
+  }, [rankingExam]);
 
   const renderColor = (rank) => {
     if (rank == 1) return "#FEDA16";
@@ -42,11 +57,12 @@ const Ranking = ({ rankingExam, shortRankingExam, isLoading }) => {
   };
 
   const renderRanking = (datas) => {
+    console.log({ datas });
     return (
       <>
         {datas &&
           datas.map((data, idx) => {
-            if (idx != datas.length - 1)
+            if (idx < 3)
               return (
                 <>
                   {isLoading ? (
@@ -62,7 +78,7 @@ const Ranking = ({ rankingExam, shortRankingExam, isLoading }) => {
                       }}
                     >
                       <Typography variant='h6' color='#fff'>
-                        {data?.user_name}
+                        {data?.user?.fullname}
                       </Typography>
                     </Box>
                   )}
@@ -104,7 +120,7 @@ const Ranking = ({ rankingExam, shortRankingExam, isLoading }) => {
         >
           {isLoading ? (
             <Skeleton variant='circular' width={120} height={120} />
-          ) : shortRankingExam && isEmpty(shortRankingExam[0]) ? (
+          ) : rankingExam && isEmpty(rankingExam[0]) ? (
             <Typography variant='body1' textAlign={"center"} color='info'>
               Chưa có dữ liệu về bài thi này
             </Typography>
@@ -112,11 +128,7 @@ const Ranking = ({ rankingExam, shortRankingExam, isLoading }) => {
             <Box
               sx={{
                 backgroundColor: renderColor(
-                  shortRankingExam &&
-                    shortRankingExam[shortRankingExam.length - 1]?.user_id ==
-                      localStorage.getItem("userId")
-                    ? shortRankingExam[shortRankingExam.length - 1].rank
-                    : ""
+                  rankingMe <= 0 ? rankingMe + 1 : ""
                 ),
                 height: 120,
                 aspectRatio: "1/1",
@@ -139,19 +151,9 @@ const Ranking = ({ rankingExam, shortRankingExam, isLoading }) => {
               >
                 <Typography
                   variant='h1'
-                  color={renderColor(
-                    shortRankingExam &&
-                      shortRankingExam[shortRankingExam.length - 1]?.user_id ==
-                        localStorage.getItem("userId")
-                      ? shortRankingExam[shortRankingExam.length - 1].rank
-                      : ""
-                  )}
+                  color={renderColor(rankingMe <= 0 ? rankingMe + 1 : "")}
                 >
-                  {shortRankingExam &&
-                  shortRankingExam[shortRankingExam.length - 1]?.user_id ==
-                    localStorage.getItem("userId")
-                    ? shortRankingExam[shortRankingExam.length - 1]?.rank
-                    : "--"}
+                  {rankingMe <= 0 ? rankingMe + 1 : "--"}
                 </Typography>
               </Box>
             </Box>
@@ -162,9 +164,9 @@ const Ranking = ({ rankingExam, shortRankingExam, isLoading }) => {
               <Skeleton variant='text' width={60} height={40} />
               <Skeleton variant='text' width={60} height={40} />
             </Box>
-          ) : shortRankingExam && isEmpty(shortRankingExam[0]) ? null : (
+          ) : rankingExam && isEmpty(rankingExam[0]) ? null : (
             <Box sx={{ marginLeft: 1 }}>
-              {renderRanking(shortRankingExam)}
+              {renderRanking(rankingExam)}
               <Button
                 sx={{ fontSize: 12, padding: 0 }}
                 onClick={() => setOpenModal(true)}

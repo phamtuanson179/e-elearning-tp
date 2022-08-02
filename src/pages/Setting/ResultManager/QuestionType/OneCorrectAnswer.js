@@ -27,9 +27,7 @@ import { isEmpty } from "lodash";
 import { MODAL_TYPE } from "constants/type";
 
 export const OneCorrectAnswer = ({ question }) => {
-  console.log({ question });
   const userAnswerIndex = question.user_answers[0];
-  console.log({ userAnswerIndex });
   const correctAnswerIndex = question.answers.findIndex(
     (item) => item.is_correct == true
   );

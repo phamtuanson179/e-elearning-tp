@@ -91,12 +91,10 @@ const QuestionModal = ({
       { content: curQuestion.ans3, is_correct: false },
     ];
     answers[parseInt(curQuestion.correctAnswer)].is_correct = true;
-    console.log({ answers });
     return answers;
   };
 
   const onSubmit = async (data) => {
-    console.log(data);
     const convertedAnswer = convertAnswerForOneCorrectAnswer();
 
     const payload = {
@@ -105,7 +103,6 @@ const QuestionModal = ({
       title: curQuestion.title,
       answers: convertedAnswer,
     };
-    console.log({ question });
     if (modalType == MODAL_TYPE.UPDATE) {
       const params = {
         id: question?.id,

@@ -32,15 +32,12 @@ export const OneCorrectAnswer = ({
   setCurQuestion,
 }) => {
   const { handleSubmit, control, reset, setValue, getValues } = useForm();
-  console.log({ curQuestion });
 
   const onChangeTitle = (e) => {
-    console.log(curQuestion);
     setCurQuestion({ ...curQuestion, title: e.target.value });
   };
 
   const onChangeCorrectAnswer = (e) => {
-    console.log(curQuestion);
     setCurQuestion({ ...curQuestion, correctAnswer: e.target.value });
   };
 

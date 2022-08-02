@@ -15,6 +15,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import "./LastestResult.scss";
 import HistoryExamTable from "containers/HistoryExamTable";
 import { isEmpty } from "lodash";
+import subjectAPI from "api/subjectAPI";
 
 const style = {
   bgcolor: "background.paper",
@@ -29,11 +30,16 @@ const style = {
   border: "1px solid #0000003d",
 };
 
-const LastestResult = ({ lastestResultExam, historyExam, isLoading }) => {
+const LastestResult = ({
+  lastestResultExam,
+  historyExam,
+  isLoading,
+  subject,
+}) => {
   const [openModal, setOpenModal] = useState();
 
-  const caculatePercentResult = (point, maxPoint) => {
-    return ((point / maxPoint) * 100).toFixed(2);
+  const caculatePercentResult = (point) => {
+    return ((point / (subject.amount_question * 10)) * 100).toFixed(2);
   };
 
   const showTime = (duration) => {
@@ -82,10 +88,7 @@ const LastestResult = ({ lastestResultExam, historyExam, isLoading }) => {
           ) : (
             <Progress
               type='circle'
-              percent={caculatePercentResult(
-                lastestResultExam?.point,
-                lastestResultExam?.max_point
-              )}
+              percent={caculatePercentResult(lastestResultExam?.point)}
               style={{ alignSelf: "center" }}
               status={lastestResultExam?.is_pass ? "" : "exception"}
             />
@@ -98,7 +101,7 @@ const LastestResult = ({ lastestResultExam, historyExam, isLoading }) => {
           ) : isEmpty(historyExam) ? null : (
             <Box sx={{ marginLeft: 1 }}>
               <Typography variant='h2'>
-                {`${lastestResultExam?.point}/${lastestResultExam?.max_point}`}
+                {`${lastestResultExam?.point}/${subject?.amount_question * 10}`}
               </Typography>
 
               <Typography

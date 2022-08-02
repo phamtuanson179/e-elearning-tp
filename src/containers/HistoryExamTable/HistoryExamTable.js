@@ -13,7 +13,7 @@ import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from "@mui/icons-material/Error";
 import { isEmpty } from "lodash";
-import { convertSecondToTime } from "utils/time";
+import { convertSecondToTime, convertTimestampToFullDate } from "utils/time";
 
 function createData(user_name, duration, point, isPass) {
   return { user_name, duration, point, isPass };
@@ -22,18 +22,18 @@ function createData(user_name, duration, point, isPass) {
 const HistoryExamTable = ({ historyExam }) => {
   const [rows, setRows] = useState();
 
-  const convertDataToRowTable = (datas) => {
-    const rows = [];
-    datas.map((data, idx) => {
-      rows.push(
-        createData(data?.user_name, data?.duration, data?.point, data?.is_pass)
-      );
-    });
-    setRows(rows);
-  };
+  // const convertDataToRowTable = (datas) => {
+  //   const rows = [];
+  //   datas.map((data, idx) => {
+  //     rows.push(
+  //       createData(data?.user_name, data?.duration, data?.point, data?.is_pass)
+  //     );
+  //   });
+  //   setRows(rows);
+  // };
 
   useEffect(() => {
-    if (historyExam) convertDataToRowTable(historyExam);
+    if (historyExam) setRows(historyExam);
   }, []);
 
   const showTime = (duration) => {
@@ -52,9 +52,9 @@ const HistoryExamTable = ({ historyExam }) => {
         <TableHead sx={{ display: "table-header-group" }}>
           <TableRow>
             <TableCell align='center'>Lần thi</TableCell>
-            <TableCell>Tên</TableCell>
             <TableCell align='right'>Điểm</TableCell>
             <TableCell align='right'>Thời gian thi</TableCell>
+            <TableCell align='right'>Thời điểm thi</TableCell>
             <TableCell align='center'>Kết quả</TableCell>
           </TableRow>
         </TableHead>
@@ -66,13 +66,13 @@ const HistoryExamTable = ({ historyExam }) => {
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell align='center'>{idx + 1}</TableCell>
-                <TableCell component='th' scope='row'>
-                  {row.user_name}
+                <TableCell align='right'>{row?.point}</TableCell>
+                <TableCell align='right'>{showTime(row?.time)}</TableCell>
+                <TableCell align='right'>
+                  {convertTimestampToFullDate(row?.created_at)}
                 </TableCell>
-                <TableCell align='right'>{row.point}</TableCell>
-                <TableCell align='right'>{showTime(row.duration)}</TableCell>
                 <TableCell align='center'>
-                  {row.isPass ? (
+                  {row.is_pass ? (
                     <CheckCircleIcon color='success' />
                   ) : (
                     <ErrorIcon color='error' />

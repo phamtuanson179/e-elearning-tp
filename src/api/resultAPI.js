@@ -5,8 +5,14 @@ const resultAPI = {
     const url = "/result/save";
     return axiosClient.post(url, data);
   },
+
   getExamHistory: (params) => {
     const url = "/result/get-exam-history";
+    return axiosClient.get(url, { params });
+  },
+
+  getFullResultRanking: (params) => {
+    const url = "/result/get-full-result-ranking";
     return axiosClient.get(url, { params });
   },
 

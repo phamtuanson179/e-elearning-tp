@@ -2,6 +2,7 @@ import { Box, Button, Container, Typography } from "@mui/material";
 import Card from "@mui/material/Card";
 import resultAPI from "api/resultAPI";
 import subjectAPI from "api/subjectAPI";
+import userAPI from "api/userApi";
 import LastestResult from "containers/LastestResult";
 import Ranking from "containers/Ranking";
 import { param } from "express-validator";
@@ -16,8 +17,8 @@ const DetailSubject = () => {
   const [lastestResultExam, setLastestResultExam] = useState();
   const [historyExam, setHistoryExam] = useState();
   const [rankingExam, setRankingExam] = useState();
-  const [shortRankingExam, setShortRankingExam] = useState();
   const [isLoading, setIsLoading] = useState(true);
+  const [listUsers, setListUsers] = useState();
 
   // const getFullRanking = async (params) => {
   //   await subjectAPI.getFullExamRanking(params).then((res) => {
@@ -34,6 +35,22 @@ const DetailSubject = () => {
     setSubject(location.state?.subject);
   }, []);
 
+  useEffect(() => {
+    convertRankingData();
+  }, [listUsers]);
+
+  const convertRankingData = () => {
+    const convertedRankingExam = rankingExam?.map((item) => ({
+      ...item,
+      user: findUserById(item?.user_id),
+    }));
+    setRankingExam(convertedRankingExam);
+  };
+
+  const findUserById = (userId) => {
+    return listUsers?.find((item) => item.id == userId);
+  };
+
   const getExamHistory = async (params) => {
     await resultAPI.getExamHistory(params).then((res) => {
       if (res.status === 200) {
@@ -47,12 +64,34 @@ const DetailSubject = () => {
     });
   };
 
+  const getFullResultRanking = async (params) => {
+    await resultAPI.getFullResultRanking(params).then((res) => {
+      if (res.status == 200) {
+        setRankingExam(res?.data);
+        getAllUser();
+      }
+    });
+  };
+
+  const getAllUser = async () => {
+    await userAPI.getAll().then((res) => {
+      if (res.status == 200) {
+        setListUsers(res?.data);
+      }
+    });
+  };
+
   useEffect(() => {
-    const params = {
+    const paramsHistory = {
       user_id: JSON.parse(localStorage.getItem("current_user")).id,
       subject_id: location.state?.subject?.id,
     };
-    getExamHistory(params);
+
+    const paramsRanking = {
+      subject_id: location.state?.subject?.id,
+    };
+    getExamHistory(paramsHistory);
+    getFullResultRanking(paramsRanking);
   }, []);
 
   return (
@@ -137,16 +176,13 @@ const DetailSubject = () => {
               <LastestResult
                 lastestResultExam={lastestResultExam}
                 historyExam={historyExam}
+                subject={subject}
                 isLoading={isLoading}
               />
             </Box>
 
             <Box sx={{ flex: 1, height: "initial" }}>
-              <Ranking
-                rankingExam={rankingExam}
-                shortRankingExam={shortRankingExam}
-                isLoading={isLoading}
-              />
+              <Ranking rankingExam={rankingExam} isLoading={isLoading} />
             </Box>
           </Box>
         </Container>

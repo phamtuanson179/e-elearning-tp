@@ -31,6 +31,7 @@ import { ROLE } from "constants/role";
 import ListSubjects from "pages/ListSubjects";
 import userAPI from "api/userApi";
 import { ResetTvSharp } from "@mui/icons-material";
+import ChangePassword from "./ChangePassword";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -79,7 +80,6 @@ const PersonalInfo = () => {
     await authAPI.aboutMe().then((res) => {
       if (res.status == 200) {
         res.data.dob = new Date(res.data?.dob).toISOString().split("T")[0];
-        console.log(res.data);
         setMe(res.data);
         setAvatar(res.data?.avatar);
         setListSubjectsId(res?.data?.list_subjects_id);
@@ -327,11 +327,15 @@ const PersonalInfo = () => {
             </Grid>
           </Grid>
         </Box>
+      </form>
+      <Box sx={{ display: "flex", justifyContent: "end" }}>
+        {" "}
+        <ChangePassword />
         <Button
           className='confirm__button'
           sx={{
-            marginLeft: "auto",
             display: "flex",
+            marginLeft: 2,
             marginRight: 2,
             marginBottom: 4,
           }}
@@ -340,7 +344,7 @@ const PersonalInfo = () => {
         >
           Lưu thay đổi
         </Button>
-      </form>
+      </Box>
       <TPNotification
         type={notification.type}
         message={notification.message}

@@ -42,7 +42,6 @@ const ResultManager = () => {
   const getAllUser = async () => {
     await userAPI.getAll().then((res) => {
       if (res.status == 200) {
-        console.log(res.data);
         setListUsers(res?.data);
       }
     });

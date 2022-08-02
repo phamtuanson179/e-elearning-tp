@@ -121,7 +121,6 @@ const QuestionTable = ({
   listQuestions,
 }) => {
   const [open, setOpen] = React.useState(false);
-  console.log({ listSubjects });
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label='simple table'>

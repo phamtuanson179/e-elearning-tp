@@ -64,7 +64,6 @@ const UserModal = ({
     reset();
     setListSubjectsId([]);
     if (modalType == MODAL_TYPE.UPDATE) {
-      console.log({ user });
       setValue("fullname", user?.fullname);
       setValue("username", user?.username);
       setValue("email", user?.email);
@@ -75,7 +74,6 @@ const UserModal = ({
   }, []);
 
   const onSubmit = async (data) => {
-    console.log(data);
     const payload = {
       fullname: data?.fullname,
       username: data?.username,
@@ -84,7 +82,6 @@ const UserModal = ({
       dob: new Date(data?.dob).getTime(),
       role: data?.role,
     };
-    console.log({ payload });
 
     if (modalType == MODAL_TYPE.UPDATE) {
       const params = {
